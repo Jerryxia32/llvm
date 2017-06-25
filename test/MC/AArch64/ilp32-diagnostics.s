@@ -1,5 +1,5 @@
-// RUN: not llvm-mc -triple aarch64-none-linux-gnu -target-abi=ilp32 \
-// RUN:  < %s 2> %t2 -filetype=obj >/dev/null
+// RUN: not llvm-mc -triple aarch64-none-linux-gnu -mabi=ilp32 \
+// RUN:  < %s 2> %t2 -filetype=obj 
 // RUN: FileCheck --check-prefix=CHECK-ERROR %s < %t2
 
         .xword sym-.
