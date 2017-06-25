@@ -124,10 +124,8 @@ def CC_MipsO32_FP : CallingConv<[
 //===----------------------------------------------------------------------===//
 
 def CC_MipsN_SoftFloat : CallingConv<[
-  CCAssignToRegWithShadow<[A0, A1, A2, A3,
-                           T0, T1, T2, T3],
-                          [D12_64, D13_64, D14_64, D15_64,
-                           D16_64, D17_64, D18_64, D19_64]>,
+  CCAssignToRegWithShadow<[A0, A1, A2, A3],
+                          [D12_64, D13_64, D14_64, D15_64]>,
   CCAssignToStack<4, 8>
 ]>;
 
@@ -143,32 +141,26 @@ def CC_MipsN : CallingConv<[
   CCIfSubtarget<"useSoftFloat()", CCIfType<[i32], CCDelegateTo<CC_MipsN_SoftFloat>>>,
 
   // Integer arguments are passed in integer registers.
-  CCIfType<[i64], CCAssignToRegWithShadow<[A0_64, A1_64, A2_64, A3_64,
-                                           T0_64, T1_64, T2_64, T3_64],
-                                          [D12_64, D13_64, D14_64, D15_64,
-                                           D16_64, D17_64, D18_64, D19_64]>>,
+  CCIfType<[i64], CCAssignToRegWithShadow<[A0_64, A1_64, A2_64, A3_64],
+                                          [D12_64, D13_64, D14_64, D15_64]>>,
 
   // f32 arguments are passed in single precision FP registers.
-  CCIfType<[f32], CCAssignToRegWithShadow<[F12, F13, F14, F15,
-                                           F16, F17, F18, F19],
-                                          [A0_64, A1_64, A2_64, A3_64,
-                                           T0_64, T1_64, T2_64, T3_64]>>,
+  CCIfType<[f32], CCAssignToRegWithShadow<[F12, F13, F14, F15],
+                                          [A0_64, A1_64, A2_64, A3_64]>>,
 
   // f64 arguments are passed in double precision FP registers.
-  CCIfType<[f64], CCAssignToRegWithShadow<[D12_64, D13_64, D14_64, D15_64,
-                                           D16_64, D17_64, D18_64, D19_64],
-                                          [A0_64, A1_64, A2_64, A3_64,
-                                           T0_64, T1_64, T2_64, T3_64]>>,
+  CCIfType<[f64], CCAssignToRegWithShadow<[D12_64, D13_64, D14_64, D15_64],
+                                          [A0_64, A1_64, A2_64, A3_64]>>,
 
   // All stack parameter slots become 64-bit doublewords and are 8-byte aligned.
   CCIfType<[f32], CCAssignToStack<4, 8>>,
   CCIfType<[i64, f64], CCAssignToStack<8, 8>>,
-  CCIfType<[iFATPTR], CCAssignToReg<[C3, C4, C5, C6, C7, C8, C9, C10]>>,
+  CCIfType<[iFATPTR], CCAssignToReg<[C3, C4, C5]>>,
   CCIfType<[iFATPTR], CCDelegateTo<CC_MipsCheriCapOnStack>>
 ]>;
 
 def CC_CHERI_CCall : CallingConv<[
-  CCIfType<[iFATPTR], CCAssignToReg<[C1, C2, C3, C4, C5, C6, C7, C8, C9, C10]>>,
+  CCIfType<[iFATPTR], CCAssignToReg<[C1, C2, C3, C4, C5]>>,
   CCIfType<[i64], CCAssignToReg<[V0_64]>>,
   CCDelegateTo<CC_MipsN>
 ]>;
@@ -183,10 +175,9 @@ def CC_MipsN_VarArg : CallingConv<[
   // All integers are promoted to 64-bit.
   CCIfType<[i8, i16, i32], CCPromoteToType<i64>>,
 
-  CCIfType<[f32], CCAssignToReg<[A0, A1, A2, A3, T0, T1, T2, T3]>>,
+  CCIfType<[f32], CCAssignToReg<[A0, A1, A2, A3]>>,
 
-  CCIfType<[i64, f64], CCAssignToReg<[A0_64, A1_64, A2_64, A3_64,
-                                      T0_64, T1_64, T2_64, T3_64]>>,
+  CCIfType<[i64, f64], CCAssignToReg<[A0_64, A1_64, A2_64, A3_64]>>,
 
   // All stack parameter slots become 64-bit doublewords and are 8-byte aligned.
   CCIfType<[f32], CCAssignToStack<4, 8>>,
@@ -405,14 +396,14 @@ def CSR_O32_FP64 :
 
 def CSR_N32 : CalleeSavedRegs<(add D20_64, D22_64, D24_64, D26_64, D28_64,
                                    D30_64, RA_64, FP_64, GP_64,
-                                   (sequence "S%u_64", 7, 0))>;
+                                   (sequence "S%u_64", 3, 0))>;
 
 def CSR_N64 : CalleeSavedRegs<(add (sequence "D%u_64", 31, 24), RA_64, FP_64,
-                                   GP_64, (sequence "S%u_64", 7, 0))>;
+                                   GP_64, (sequence "S%u_64", 3, 0))>;
 
 def CSR_N64_Cheri : CalleeSavedRegs<(add (sequence "D%u_64", 31, 24), RA_64, FP_64,
-                                   GP_64, (sequence "S%u_64", 7, 0),
-                                   (sequence "C%u", 24, 17))>;
+                                   GP_64, (sequence "S%u_64", 3, 0),
+                                   (sequence "C%u", 7, 6))>;
 
 
 def CSR_Mips16RetHelper :

@@ -392,7 +392,7 @@ namespace llvm {
       SDValue Hi = getTargetNode(N, Ty, DAG, MipsII::MO_ABS_HI);
       SDValue Lo = getTargetNode(N, Ty, DAG, MipsII::MO_ABS_LO);
       return DAG.getNode(ISD::ADD, DL, Ty,
-                         DAG.getNode(MipsISD::Hi, DL, Ty, Hi),
+                         DAG.getNode(MipsISD::Highest, DL, Ty, Hi),
                          DAG.getNode(MipsISD::Lo, DL, Ty, Lo));
    }
 
@@ -408,21 +408,8 @@ namespace llvm {
                           SelectionDAG &DAG) const {
       SDValue Hi = getTargetNode(N, Ty, DAG, MipsII::MO_ABS_HI);
       SDValue Lo = getTargetNode(N, Ty, DAG, MipsII::MO_ABS_LO);
-
-      SDValue Highest =
-          DAG.getNode(MipsISD::Highest, DL, Ty,
-                      getTargetNode(N, Ty, DAG, MipsII::MO_HIGHEST));
-      SDValue Higher = getTargetNode(N, Ty, DAG, MipsII::MO_HIGHER);
-      SDValue HigherPart =
-          DAG.getNode(ISD::ADD, DL, Ty, Highest,
-                      DAG.getNode(MipsISD::Higher, DL, Ty, Higher));
-      SDValue Cst = DAG.getConstant(16, DL, MVT::i32);
-      SDValue Shift = DAG.getNode(ISD::SHL, DL, Ty, HigherPart, Cst);
-      SDValue Add = DAG.getNode(ISD::ADD, DL, Ty, Shift,
-                                DAG.getNode(MipsISD::Hi, DL, Ty, Hi));
-      SDValue Shift2 = DAG.getNode(ISD::SHL, DL, Ty, Add, Cst);
-
-      return DAG.getNode(ISD::ADD, DL, Ty, Shift2,
+      return DAG.getNode(ISD::ADD, DL, Ty,
+                         DAG.getNode(MipsISD::Highest, DL, Ty, Hi),
                          DAG.getNode(MipsISD::Lo, DL, Ty, Lo));
    }
 

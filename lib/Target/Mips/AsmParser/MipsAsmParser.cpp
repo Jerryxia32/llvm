@@ -3085,21 +3085,11 @@ bool MipsAsmParser::loadAndAddSymbolAddress(const MCExpr *SymExpr,
       unsigned ATReg = getATReg(IDLoc);
 
       // If $rs is the same as $rd:
-      // (d)la $rd, sym($rd) => lui    $at, %highest(sym)
-      //                        daddiu $at, $at, %higher(sym)
-      //                        dsll   $at, $at, 16
-      //                        daddiu $at, $at, %hi(sym)
-      //                        dsll   $at, $at, 16
+      // (d)la $rd, sym($rd) => lui    $at, %hi(sym)
       //                        daddiu $at, $at, %lo(sym)
       //                        daddu  $rd, $at, $rd
-      TOut.emitRX(Mips::LUi, ATReg, MCOperand::createExpr(HighestExpr), IDLoc,
+      TOut.emitRX(Mips::LUi, ATReg, MCOperand::createExpr(HiExpr), IDLoc,
                   STI);
-      TOut.emitRRX(Mips::DADDiu, ATReg, ATReg,
-                   MCOperand::createExpr(HigherExpr), IDLoc, STI);
-      TOut.emitRRI(Mips::DSLL, ATReg, ATReg, 16, IDLoc, STI);
-      TOut.emitRRX(Mips::DADDiu, ATReg, ATReg, MCOperand::createExpr(HiExpr),
-                   IDLoc, STI);
-      TOut.emitRRI(Mips::DSLL, ATReg, ATReg, 16, IDLoc, STI);
       TOut.emitRRX(Mips::DADDiu, ATReg, ATReg, MCOperand::createExpr(LoExpr),
                    IDLoc, STI);
       TOut.emitRRR(Mips::DADDu, DstReg, ATReg, SrcReg, IDLoc, STI);
@@ -3110,24 +3100,15 @@ bool MipsAsmParser::loadAndAddSymbolAddress(const MCExpr *SymExpr,
 
       // If the $rs is different from $rd or if $rs isn't specified and we
       // have $at available:
-      // (d)la $rd, sym/sym($rs) => lui    $rd, %highest(sym)
-      //                            lui    $at, %hi(sym)
-      //                            daddiu $rd, $rd, %higher(sym)
-      //                            daddiu $at, $at, %lo(sym)
-      //                            dsll32 $rd, $rd, 0
-      //                            daddu  $rd, $rd, $at
+      // (d)la $rd, sym/sym($rs) => lui    $rd, %hi(sym)
+      //                            daddiu $rd, $rd, %lo(sym)
       //                            (daddu  $rd, $rd, $rs)
       //
       // Which is preferred for superscalar issue.
-      TOut.emitRX(Mips::LUi, DstReg, MCOperand::createExpr(HighestExpr), IDLoc,
+      TOut.emitRX(Mips::LUi, DstReg, MCOperand::createExpr(HiExpr), IDLoc,
                   STI);
-      TOut.emitRX(Mips::LUi, ATReg, MCOperand::createExpr(HiExpr), IDLoc, STI);
       TOut.emitRRX(Mips::DADDiu, DstReg, DstReg,
-                   MCOperand::createExpr(HigherExpr), IDLoc, STI);
-      TOut.emitRRX(Mips::DADDiu, ATReg, ATReg, MCOperand::createExpr(LoExpr),
-                   IDLoc, STI);
-      TOut.emitRRI(Mips::DSLL32, DstReg, DstReg, 0, IDLoc, STI);
-      TOut.emitRRR(Mips::DADDu, DstReg, DstReg, ATReg, IDLoc, STI);
+                   MCOperand::createExpr(LoExpr), IDLoc, STI);
       if (UseSrcReg)
         TOut.emitRRR(Mips::DADDu, DstReg, DstReg, SrcReg, IDLoc, STI);
 
@@ -3135,20 +3116,10 @@ bool MipsAsmParser::loadAndAddSymbolAddress(const MCExpr *SymExpr,
     } else if (!canUseATReg() && !RdRegIsRsReg) {
       // Otherwise, synthesize the address in the destination register
       // serially:
-      // (d)la $rd, sym/sym($rs) => lui    $rd, %highest(sym)
-      //                            daddiu $rd, $rd, %higher(sym)
-      //                            dsll   $rd, $rd, 16
-      //                            daddiu $rd, $rd, %hi(sym)
-      //                            dsll   $rd, $rd, 16
+      // (d)la $rd, sym/sym($rs) => lui    $rd, %hi(sym)
       //                            daddiu $rd, $rd, %lo(sym)
-      TOut.emitRX(Mips::LUi, DstReg, MCOperand::createExpr(HighestExpr), IDLoc,
+      TOut.emitRX(Mips::LUi, DstReg, MCOperand::createExpr(HiExpr), IDLoc,
                   STI);
-      TOut.emitRRX(Mips::DADDiu, DstReg, DstReg,
-                   MCOperand::createExpr(HigherExpr), IDLoc, STI);
-      TOut.emitRRI(Mips::DSLL, DstReg, DstReg, 16, IDLoc, STI);
-      TOut.emitRRX(Mips::DADDiu, DstReg, DstReg,
-                   MCOperand::createExpr(HiExpr), IDLoc, STI);
-      TOut.emitRRI(Mips::DSLL, DstReg, DstReg, 16, IDLoc, STI);
       TOut.emitRRX(Mips::DADDiu, DstReg, DstReg,
                    MCOperand::createExpr(LoExpr), IDLoc, STI);
       if (UseSrcReg)
