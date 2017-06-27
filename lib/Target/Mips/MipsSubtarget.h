@@ -113,6 +113,9 @@ class MipsSubtarget : public MipsGenSubtargetInfo {
   // HasMips5_32r2 - Has the subset of MIPS-V present in MIPS32r2
   bool HasMips5_32r2;
 
+  /// IsCheri64 - CHERI capabilities are 64 bits.
+  bool IsCheri64;
+
   /// IsCheri128 - CHERI capabilities are 128 bits.
   bool IsCheri128;
 
@@ -266,6 +269,7 @@ public:
   bool useSmallSection() const { return UseSmallSection; }
   bool isCheri() const { return IsCheri; }
   bool isCheri128() const { return IsCheri128; }
+  bool isCheri64() const { return IsCheri64; }
   /// This is a very ugly hack.  CodeGenPrepare can sink pointer arithmetic to
   /// appear closer to load and store operations (because SelectionDAG only
   /// looks at one basic block at a time).  Unfortunately, it defaults to using
@@ -303,7 +307,7 @@ public:
   static bool useConstantIslands();
 
   unsigned stackAlignment() const {
-    return isCheri() ? (isCheri128() ? 16 : 32)  : (isGP64bit() ? 16 : 8);
+    return isCheri() ? ((isCheri128() || isCheri64()) ? 16 : 32)  : (isGP64bit() ? 16 : 8);
   }
 
   // Grab relocation model

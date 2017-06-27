@@ -4287,7 +4287,11 @@ EVT MipsTargetLowering::getOptimalMemOpType(uint64_t Size, unsigned DstAlign,
       case 16:
         if (Subtarget.isCheri128())
           return MVT::iFATPTR;
-      case 8: return MVT::i64;
+      case 8: {
+        if (Subtarget.isCheri64())
+          return MVT::iFATPTR;
+        return MVT::i64;
+      }
       case 4: return MVT::i32;
       default: return MVT::i8;
     }
