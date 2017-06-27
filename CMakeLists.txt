@@ -311,21 +311,21 @@ set(LLVM_EXAMPLES_BINARY_DIR ${LLVM_BINARY_DIR}/examples)
 set(LLVM_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(LLVM_ALL_TARGETS
-  AArch64
-  AMDGPU
-  ARM
-  BPF
-  Hexagon
-  Lanai
+    #AArch64
+    #AMDGPU
+    #ARM
+    #BPF
+    #Hexagon
+    #Lanai
   Mips
-  MSP430
-  NVPTX
-  PowerPC
-  RISCV
-  Sparc
-  SystemZ
-  X86
-  XCore
+  #MSP430
+  #NVPTX
+  #PowerPC
+  #RISCV
+  #Sparc
+  #SystemZ
+  #X86
+  #XCore
   )
 
 # List of targets with JIT support:
