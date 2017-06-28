@@ -315,6 +315,9 @@ def CSub : CheriFmt3Op<0xa, (outs GPR32Opnd: $r1),
 
 // Casting:
 
+def CFromPtr64 : CheriFmtRegs<4, 7, (outs CheriOpnd: $r0),
+  (ins CheriOpnd: $r1, GPR64Opnd: $r2),
+  "cfromptr\t$r0, $r1, $r2", [(set CheriOpnd: $r0, (int_cheri_cap_from_pointer CheriOpnd: $r1, (i32 (trunc GPR64Opnd: $r2))))]>;
 def CFromPtr : CheriFmtRegs<4, 7, (outs CheriOpnd: $r0),
   (ins CheriOpnd: $r1, GPR32Opnd: $r2),
   "cfromptr\t$r0, $r1, $r2", [(set CheriOpnd: $r0, (int_cheri_cap_from_pointer CheriOpnd: $r1, GPR32Opnd: $r2))]>;
@@ -331,6 +334,8 @@ def CToPtr32 : CheriFmtRegs<0xc, 0, (outs GPR32Opnd: $r0),
 }
 
 // Int to pointer in address space 0
+def : Pat<(inttoptr GPR64Opnd:$rt),
+          (CFromPtr64 C0, $rt)>;
 def : Pat<(inttoptr GPR32Opnd:$rt),
           (CFromPtr C0, $rt)>;
 def : Pat<(inttoptr GPR32:$rt),
