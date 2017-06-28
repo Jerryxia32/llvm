@@ -29,12 +29,12 @@ def int_cheri_cap_perms_and :
   GCCBuiltinAlias<"__builtin_mips_cheri_and_cap_perms">,
   GCCBuiltin<"__builtin_cheri_perms_and">,
   Intrinsic<[llvm_fatptr_ty],
-            [llvm_fatptr_ty, llvm_i64_ty],
+            [llvm_fatptr_ty, llvm_i32_ty],
             [IntrNoMem]>;
 def int_cheri_cap_perms_get :
   GCCBuiltinAlias<"__builtin_mips_cheri_get_cap_perms">,
   GCCBuiltin<"__builtin_cheri_perms_get">,
-  Intrinsic<[llvm_i64_ty],
+  Intrinsic<[llvm_i32_ty],
             [llvm_fatptr_ty],
             [IntrNoMem]>;
 def int_cheri_cap_bounds_set :
@@ -45,19 +45,19 @@ def int_cheri_cap_bounds_set :
 def int_cheri_cap_type_get :
   GCCBuiltinAlias<"__builtin_mips_cheri_get_cap_type">,
   GCCBuiltin<"__builtin_cheri_type_get">,
-  Intrinsic<[llvm_i64_ty],
+  Intrinsic<[llvm_i32_ty],
             [llvm_fatptr_ty],
             [IntrNoMem]>;
 def int_cheri_cap_tag_get  :
   GCCBuiltinAlias<"__builtin_mips_cheri_get_cap_tag">,
   GCCBuiltin<"__builtin_cheri_tag_get">,
-  Intrinsic<[llvm_i64_ty],
+  Intrinsic<[llvm_i32_ty],
             [llvm_fatptr_ty],
             [IntrNoMem]>;
 def int_cheri_cap_sealed_get  :
   GCCBuiltinAlias<"__builtin_mips_cheri_get_cap_sealed">,
   GCCBuiltin<"__builtin_cheri_sealed_get">,
-  Intrinsic<[llvm_i64_ty],
+  Intrinsic<[llvm_i32_ty],
             [llvm_fatptr_ty],
             [IntrNoMem]>;
 
@@ -83,7 +83,7 @@ def int_cheri_cap_unseal  :
 def int_cheri_cap_perms_check :
   GCCBuiltinAlias<"__builtin_mips_cheri_check_perms">,
   GCCBuiltin<"__builtin_cheri_perms_check">,
-  Intrinsic<[], [llvm_fatptr_ty, llvm_i64_ty], []>;
+  Intrinsic<[], [llvm_fatptr_ty, llvm_i32_ty], []>;
 def int_cheri_cap_type_check :
   GCCBuiltinAlias<"__builtin_mips_cheri_check_type">,
   GCCBuiltin<"__builtin_cheri_type_check">,
