@@ -344,7 +344,7 @@ def : Pat<(ptrtoint CheriOpnd:$rt),
 let DecoderNamespace="CHERI" in
 def STORECAP : CheriFmtCLS<0x3e, (outs), (ins CheriOpnd:$cs, GPR32Opnd:$rt, simm11s3:$offset, CheriOpnd:$cb),
                          "csc\t$cs, ${rt}, ${offset}(${cb})",
-                         [(store CheriOpnd:$cs, (add (add GPR32Opnd:$rt, (i32 (ptrtoint CheriOpnd:$cb))), (i32 simm11s3Pattern:$offset)))]>;
+                         [(store CheriOpnd:$cs, (add (add GPR32Opnd:$rt, (ptrtoint CheriOpnd:$cb)), (i32 simm11s3Pattern:$offset)))]>;
 
 def CLEARTAG : CheriFmtClearTag<(outs CheriOpnd:$cd), (ins CheriOpnd:$cb), "ccleartag\t$cd, $cb",
                                 [(set CheriOpnd:$cd, (int_cheri_cap_tag_clear CheriOpnd:$cb))]>;
@@ -358,7 +358,7 @@ def : Pat<(store CheriOpnd:$cs, GPR32Opnd:$rt),
 let Predicates = [IsCHERI] in {
 def LOADCAP : CheriFmtCLS<0x36, (outs CheriOpnd:$cs), (ins GPR32Opnd:$rt, simm11s3:$offset, CheriOpnd:$cb),
                         "clc\t$cs, ${rt}, ${offset}(${cb})",
-                        [(set CheriOpnd:$cs, (load (add (add GPR32Opnd:$rt, (i32 (ptrtoint CheriOpnd:$cb))), (i32 simm11s3Pattern:$offset))))]> {
+                        [(set CheriOpnd:$cs, (load (add (add GPR32Opnd:$rt, (ptrtoint CheriOpnd:$cb)), (i32 simm11s3Pattern:$offset))))]> {
   let DecoderNamespace="CHERI";
 }
 
