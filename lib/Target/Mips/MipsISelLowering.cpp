@@ -297,7 +297,7 @@ MipsTargetLowering::MipsTargetLowering(const MipsTargetMachine &TM,
   setOperationAction(ISD::TRAP,               MVT::Other, Legal);
   if (Subtarget.isCheri()) {
     setOperationAction(ISD::ADDRSPACECAST,    MVT::iFATPTR, Custom);
-    setOperationAction(ISD::ADDRSPACECAST,    MVT::i64, Custom);
+    setOperationAction(ISD::ADDRSPACECAST,    MVT::i32, Custom);
   }
 
   // Mips Custom Operations
@@ -1983,12 +1983,12 @@ SDValue MipsTargetLowering::lowerADDRSPACECAST(SDValue Op, SelectionDAG &DAG)
   SDLoc DL(Op);
   SDValue Src = Op.getOperand(0);
   EVT DstTy = Op.getValueType();
-  if (Src.getValueType() == MVT::i64) {
+  if (Src.getValueType() == MVT::i32) {
     assert(Op.getValueType() == MVT::iFATPTR);
     return DAG.getNode(ISD::INTTOPTR, DL, DstTy, Src);
   }
   assert(Src.getValueType() == MVT::iFATPTR);
-  assert(Op.getValueType() == MVT::i64);
+  assert(Op.getValueType() == MVT::i32);
   return DAG.getNode(ISD::PTRTOINT, DL, DstTy, Src);
 }
 
