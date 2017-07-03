@@ -613,6 +613,8 @@ static Instruction *combineLoadToOperationType(InstCombiner &IC, LoadInst &LI) {
       DL.isLegalInteger(DL.getTypeStoreSizeInBits(Ty)) &&
       DL.getTypeStoreSizeInBits(Ty) == DL.getTypeSizeInBits(Ty) &&
       !DL.isNonIntegralPointerType(Ty)) {
+    if (Ty->getPointerAddressSpace() == 200)
+      return nullptr;
     if (all_of(LI.users(), [&LI](User *U) {
           auto *SI = dyn_cast<StoreInst>(U);
           return SI && SI->getPointerOperand() != &LI &&
