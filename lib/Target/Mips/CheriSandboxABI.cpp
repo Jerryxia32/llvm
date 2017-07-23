@@ -143,7 +143,7 @@ public:
 
       // Get the size of the alloca
       unsigned ElementSize = DL->getTypeAllocSize(AllocationTy);
-      Value *Size = ConstantInt::get(Type::getInt64Ty(C), ElementSize);
+      Value *Size = ConstantInt::get(Type::getInt32Ty(C), ElementSize);
       if (AI->isArrayAllocation())
         Size = B.CreateMul(Size, AI->getArraySize());
       Alloca = B.CreateCall(SetLenFun, {Alloca, Size});

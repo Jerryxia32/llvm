@@ -1557,7 +1557,7 @@ std::pair<llvm::Triple, StringRef> Triple::getABIVariant(StringRef ABI) const {
     return std::make_pair(T, ABI);
 
   case Triple::cheri:
-    if (ABI == "" || ABI.startswith("purecap") || ABI.startswith("n64") ||
+    if (ABI == "" || ABI.startswith("purecap") || ABI.startswith("purecap32") || ABI.startswith("n64") ||
         ABI.startswith("n32"))
       return std::make_pair(T, ABI);
     T.setArch(Triple::UnknownArch);

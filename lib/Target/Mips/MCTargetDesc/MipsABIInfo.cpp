@@ -66,6 +66,8 @@ MipsABIInfo MipsABIInfo::computeTargetABI(const Triple &TT, StringRef CPU,
   if (ABIName.startswith("n64"))
     return MipsABIInfo::N64();
   if (ABIName.startswith("sandbox") || ABIName.startswith("purecap"))
+    if (ABIName.startswith("purecap32"))
+      return MipsABIInfo::CheriSandbox32();
     return MipsABIInfo::CheriSandbox();
   if (TT.getEnvironment() == Triple::ABI32 ||
       TT.getEnvironment() == Triple::AndroidABI32 ||
