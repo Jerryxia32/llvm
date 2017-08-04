@@ -68,7 +68,7 @@ UseClearRegs("cheri-use-clearregs",
 cl::opt<bool>
 SkipGlobalBounds("cheri-no-global-bounds",
   cl::desc("Skip bounds checks on globals"),
-  cl::init(false));
+  cl::init(true));
 
 static const MCPhysReg Mips64DPRegs[8] = {
   Mips::D12_64, Mips::D13_64, Mips::D14_64, Mips::D15_64,
