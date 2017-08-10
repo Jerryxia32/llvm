@@ -207,6 +207,8 @@ public:
     ABI32,
     ABIN32,
     ABI64,
+    PURECAP32,
+    PURECAP,
     GNUABI32,
     GNUABIN32,
     LastEnvironmentType = GNUABIN32
