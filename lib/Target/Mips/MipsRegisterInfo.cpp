@@ -119,8 +119,11 @@ MipsRegisterInfo::getCalleeSavedRegs(const MachineFunction *MF) const {
   if (Subtarget.isSingleFloat())
     return CSR_SingleFloatOnly_SaveList;
 
-  if (Subtarget.isCheri())
+  if (Subtarget.isCheri()) {
+    if (Subtarget.isCheri64())
+      return CSR_N32_Cheri_SaveList;
     return CSR_N64_Cheri_SaveList;
+  }
 
   if (Subtarget.isABI_N64())
     return CSR_N64_SaveList;
@@ -169,16 +172,17 @@ const uint32_t *MipsRegisterInfo::getMips16RetHelperMask() {
 BitVector MipsRegisterInfo::
 getReservedRegs(const MachineFunction &MF) const {
   static const MCPhysReg ReservedGPR32[] = {
-    Mips::ZERO, Mips::K0, Mips::K1, Mips::SP
+    Mips::ZERO, Mips::K0, Mips::K1, Mips::SP, Mips::T0, Mips::T1, Mips::T2, Mips::T3, Mips::T6, Mips::T7, Mips::T8, Mips::S4, Mips::S5, Mips::S6, Mips::S7
   };
 
   static const MCPhysReg ReservedGPR64[] = {
-    Mips::ZERO_64, Mips::K0_64, Mips::K1_64, Mips::SP_64
+    Mips::ZERO_64, Mips::K0_64, Mips::K1_64, Mips::SP_64, Mips::T0_64, Mips::T1_64, Mips::T2_64, Mips::T3_64, Mips::T6_64, Mips::T7_64, Mips::T8_64, Mips::S4_64, Mips::S5_64, Mips::S6_64, Mips::S7_64
   };
 
   static const uint16_t ReservedCheriRegs[] = {
-    Mips::C0, Mips::C25, Mips::C26, Mips::C27, Mips::C28, Mips::C29, Mips::C30,
-    Mips::C31
+    Mips::C0, Mips::C11, Mips::C12, Mips::C25, Mips::C26, Mips::C27, Mips::C28, Mips::C29, Mips::C30,
+    Mips::C31, Mips::C8, Mips::C9, Mips::C10, Mips::C13, Mips::C14, Mips::C15, Mips::C16, Mips::C17, Mips::C18, Mips::C19, Mips::C20, Mips::C21, Mips::C22, Mips::C23, Mips::C24
+
   };
 
   // C1-C7, C11, C12, C17-C23 allowed
@@ -213,8 +217,8 @@ getReservedRegs(const MachineFunction &MF) const {
 
   // For mno-abicalls, GP is a program invariant!
   if (!Subtarget.isABICalls()) {
-    Reserved.set(Mips::GP);
-    Reserved.set(Mips::GP_64);
+    //Reserved.set(Mips::GP);
+    //Reserved.set(Mips::GP_64);
   }
 
   if (Subtarget.isFP64bit()) {
@@ -294,8 +298,8 @@ getReservedRegs(const MachineFunction &MF) const {
 
   // Reserve GP if small section is used.
   if (Subtarget.useSmallSection()) {
-    Reserved.set(Mips::GP);
-    Reserved.set(Mips::GP_64);
+    //Reserved.set(Mips::GP);
+    //Reserved.set(Mips::GP_64);
   }
 
   if (Subtarget.isABI_O32() && !Subtarget.useOddSPReg()) {

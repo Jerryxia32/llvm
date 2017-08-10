@@ -70,9 +70,8 @@ SkipGlobalBounds("cheri-no-global-bounds",
   cl::desc("Skip bounds checks on globals"),
   cl::init(true));
 
-static const MCPhysReg Mips64DPRegs[8] = {
-  Mips::D12_64, Mips::D13_64, Mips::D14_64, Mips::D15_64,
-  Mips::D16_64, Mips::D17_64, Mips::D18_64, Mips::D19_64
+static const MCPhysReg Mips64DPRegs[4] = {
+  Mips::D12_64, Mips::D13_64, Mips::D14_64, Mips::D15_64
 };
 
 // If I is a shifted mask, set the size (Size) and the first bit of the
